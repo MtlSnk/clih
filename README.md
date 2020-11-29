@@ -15,8 +15,7 @@ Clone the repo.
 git clone https://github.com/MtlSnk/clih.git
 ```
 
-Edit `.clihrc` with the paths to your scripts/autocompletion directories, if you
-don't wish to place them under `$HOME/scripts` and `$HOME/scripts/completion`.
+Edit `.clihrc` with the paths to your scripts/autocompletion directories.
 
 ```bash
 # .clihrc
@@ -45,6 +44,13 @@ Its dependencies:
 It'll tell you if deps are missing, arguments are invalid and it'll provide
 custom-tailored autocompletion, have a look at [the script](scripts/mdp.sh) and
 [the autocompletion](scripts/completion/mdp).
+
+Use it in a directory that contains at least one Markdown file.\
+For instance, use it the repo you just cloned as such:
+
+```
+mdp<TAB><TAB><ENTER>
+```
 
 ## Write your own CLIHs!
 
