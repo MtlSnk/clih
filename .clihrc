@@ -1,0 +1,51 @@
+#!/bin/bash
+SCRIPTS_DIR="$HOME/scripts"             # scripts dir
+COMPLET_DIR="$SCRIPTS_DIR/completion"   # tab-/autocompletion dir
+
+unset CLIH
+
+# Whitelist of scripts to consider 'helpers'
+CLIH+=(mdp)   # Markdown preview
+
+# Functions ###################################################################
+clih_main() {
+    [[ ! -z $CLIH_VERBOSE ]] && unset CLIH_ACTIVE && declare -A CLIH_ACTIVE
+
+    clih_activate
+
+    [[ ! -z $CLIH_VERBOSE ]] && clih_print
+}
+
+clih_alias_script() {
+    eval "$2() { sh $1/$2.sh \$@; }"
+    [[ ! -z $CLIH_VERBOSE ]] && CLIH_ACTIVE[$2]+=+script
+}
+
+clih_tab_complete() {
+    source "$1/$2"
+    [[ ! -z $CLIH_VERBOSE ]] && CLIH_ACTIVE[$2]+=+completion
+}
+
+clih_activate() {
+    for H in "${CLIH[@]}"; do
+        [[ -f "$SCRIPTS_DIR/$H.sh" ]] && clih_alias_script "$SCRIPTS_DIR" "$H"
+        [[ -f "$COMPLET_DIR/$H" ]]    && clih_tab_complete "$COMPLET_DIR" "$H"
+    done
+}
+
+clih_print() {
+    printf "The following CLI helpers are at your disposal:\n"
+    for H in "${!CLIH_ACTIVE[@]}"; do
+        printf "%-s\t%-s\n" "$H" "${CLIH_ACTIVE[$H]}"
+    done
+}
+# Entry #######################################################################
+clih_main
+
+# Prevent internal functions from leaking to env ##############################
+unset \
+    clih_main \
+    clih_alias_script \
+    clih_tab_complete \
+    clih_activate \
+    clih_print

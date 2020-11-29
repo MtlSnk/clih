@@ -1,0 +1,11 @@
+_mdp () {
+    local CUR="${COMP_WORDS[COMP_CWORD]}"
+    local OPTIONS="$(ls $(pwd) | grep '\.md')"
+
+    [[ "${COMP_CWORD}" -gt 1 ]] \
+        && COMPREPLY=() \
+        || COMPREPLY=($(compgen -W "${OPTIONS}" -- "${CUR}"))
+
+    return 0
+}
+complete -F _mdp mdp
